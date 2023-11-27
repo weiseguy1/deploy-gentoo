@@ -1,0 +1,39 @@
+sys-auth/seatd builtin server
+# required by media-libs/mesa-23.1.8::gentoo
+# required by gui-libs/xdg-desktop-portal-hyprland-1.2.2::guru
+# required by gui-libs/xdg-desktop-portal-hyprland (argument)
+>=media-libs/libglvnd-1.7.0 X
+# required by media-libs/mesa-23.1.8::gentoo[-video_cards_radeon,-video_cards_r600,video_cards_radeonsi,-video_cards_r300]
+# required by gui-libs/xdg-desktop-portal-hyprland-1.2.2::guru
+# required by gui-libs/xdg-desktop-portal-hyprland (argument)
+>=x11-libs/libdrm-2.4.116 video_cards_radeon
+# required by dev-qt/qtwayland-6.5.2-r3::gentoo
+# required by gui-libs/xdg-desktop-portal-hyprland-1.2.2::guru
+# required by gui-libs/xdg-desktop-portal-hyprland (argument)
+>=dev-qt/qtbase-6.5.2-r2 opengl
+# required by dev-qt/qtgui-5.15.10-r2::gentoo[X]
+# required by dev-qt/qtdeclarative-5.15.10-r3::gentoo
+# required by dev-qt/qtwayland-5.15.10-r6::gentoo
+>=x11-libs/libxkbcommon-1.5.0 X
+# required by dev-qt/qtwayland-5.15.10-r6::gentoo
+>=dev-qt/qtgui-5.15.10-r2 egl
+# required by dev-qt/qttranslations-6.5.2::gentoo
+# required by dev-qt/qtbase-6.5.2-r2::gentoo[nls]
+# required by dev-qt/qtwayland-6.5.2-r3::gentoo
+# required by gui-libs/xdg-desktop-portal-hyprland-1.2.2::guru
+# required by gui-libs/xdg-desktop-portal-hyprland (argument)
+>=dev-qt/qttools-6.5.2-r2 opengl
+# required by x11-libs/gtk+-3.24.38::gentoo
+# required by dev-cpp/gtkmm-3.24.8::gentoo
+# required by gui-apps/waybar-0.9.22::gentoo
+# required by gui-apps/waybar (argument)
+>=x11-libs/cairo-1.17.8 X
+# required by dev-cpp/gtkmm-3.24.8::gentoo
+# required by gui-apps/waybar-0.9.22::gentoo
+# required by gui-apps/waybar (argument)
+>=x11-libs/gtk+-3.24.38 -X
+# required by dev-cpp/pangomm-2.46.3::gentoo
+# required by dev-cpp/gtkmm-3.24.8::gentoo
+# required by gui-apps/waybar-0.9.22::gentoo
+# required by gui-apps/waybar (argument)
+>=dev-cpp/cairomm-1.14.4:0 X

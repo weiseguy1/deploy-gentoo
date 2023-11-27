@@ -1,0 +1,125 @@
+#!/bin/bash
+# This creates disk layout
+# 512M boot
+# 32G swap
+# Rest root partition
+
+#VARIABLES
+BOOT_SIZE=+512M
+SWAP_SIZE=$(free --giga | grep Mem | awk '{$1=$1};1' | cut -d " " -f 2)
+DRIVE_LIST=$(lsblk -dln -o name | grep -v loop)
+CRYPT_ROOT=/dev/mapper/cryptroot
+MOUNT_POINT=/mnt/gentoo
+SNAP_DIR=${MOUNT_POINT}/.snapshots
+HOME_DIR=${MOUNT_POINT}/home
+BOOT_DIR=${MOUNT_POINT}/boot
+
+echo -e "Drive List"
+echo -e "-----------------"
+echo -e "${DRIVE_LIST}"
+echo -e "-----------------"
+read -p "Please enter a drive: " SELECTED_DRIVE
+MAIN_DRIVE=/dev/${SELECTED_DRIVE}
+case $SELECTED_DRIVE in
+    'sd'[a-z])
+	BOOT_PART=${MAIN_DRIVE}\1
+	SWAP_PART=${MAIN_DRIVE}\2
+	ROOT_PART=${MAIN_DRIVE}\3
+	clear
+	;;
+    'nvme'[0-9]'n1')
+	BOOT_PART=${MAIN_DRIVE}p1
+	SWAP_PART=${MAIN_DRIVE}p2
+	ROOT_PART=${MAIN_DRIVE}p3
+	clear
+	;;
+   *)
+   	echo "Unknown file type"
+	exit
+	;;
+esac
+
+read -p "Default swap is: +${SWAP_SIZE}G. Change? [y/N]: " yesnoprompt
+case $yesnoprompt in
+    [yY][eE][sS]|[yY])
+	read -p "What should swap size be?: " SWAP_SIZE
+	;;
+    *)
+    	clear
+	;;
+esac
+
+echo -e "   PARITIONING LAYOUT    "
+echo -e "Main Drive: ${MAIN_DRIVE}"
+echo -e "NAME		FSTYPE   SIZE"
+echo -e "-------------------------"
+echo -e "${BOOT_PART}	FAT32	${BOOT_SIZE}"
+echo -e "${SWAP_PART}   SWAP	+${SWAP_SIZE}G"
+echo -e "${ROOT_PART}   BTRFS   REST OF DRIVE "
+echo -e "-------------------------"
+echo -e "WARNING: This will wipe all data on ${MAIN_DRIVE}!"
+read -p "Do you wish to continue? [y/N]: " yesnoprompt
+case $yesnoprompt in
+    [yY][eE][sS]|[yY])
+	;;
+    *)
+    	exit
+	;;
+esac
+
+#echo "Wiping data on ${MAIN_DRIVE}."
+#wipefs -a $MAIN_DRIVE*
+
+#echo "Partitioning drive..."
+#(
+#echo g
+#echo n
+#echo
+#echo
+#echo $BOOT_SIZE
+#echo n
+#echo
+#echo
+#echo $SWAP_SIZE
+#echo n
+#echo
+#echo
+#echo
+#echo w
+#) | fdisk $MAIN_DRIVE && sync
+
+
+#echo "Formatting ${BOOT_PART}"
+#mkfs.vfat -F 32 $BOOT_PART
+#fatlabel $BOOT_PART BOOT
+
+#echo "Encrypting ${ROOT_PART}"
+#read -sp "Please Enter Passphrase: " passphrase1
+#echo
+#read -sp "Please Re-Enter Passphrase: " passphrase2
+#echo
+#if [ "$passphrase1" != "$passphrase2" ]; then
+#	echo -e "Passphrase does not match!\n"
+#	exit
+#else
+#    echo -e "Finishing up LUKS...\n"
+#   echo $passphrase1 | cryptsetup -q luksFormat $ROOT_PART
+#   echo $passphrase1 | cryptsetup luksOpen $ROOT_PART cryptroot
+#   echo -e "Setting up BTRFS on ${CRYPT_ROOT}."
+#   mkfs.btrfs -L ROOT $CRYPT_ROOT
+#   mkdir -p $MOUNT_POINT
+#   mount $CRYPT_ROOT $MOUNT_POINT
+#   cd $MOUNT_POINT
+#   btrfs subvolume create @
+#   btrfs subvolume create @snapshots
+#   btrfs subvolume create @home
+#   cd /
+#   umount $MOUNT_POINT
+#   echo -e "Mounting Partitions...\n"
+#   mount -o noatime,compress=zstd,space_cache=v2,discard=async,subvol=@ $CRYPT_ROOT $MOUNT_POINT
+#   mkdir -p $MOUNT_POINT/{boot,home,.snapshots}
+#   mount -o noatime,compress=zstd,space_cache=v2,discard=async,subvol=@snapshots $CRYPTROOT $SNAP_DIR
+#   mount -o noatime,compress=zstd,space_cache=v2,discard=async,subvol=@home $CRYPT_ROOT $HOME_DIR
+#   mount $BOOT_PART $BOOT_DIR
+#   echo -e "Finished\!\n"
+#fi

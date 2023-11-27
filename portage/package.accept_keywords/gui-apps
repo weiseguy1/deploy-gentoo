@@ -1,0 +1,4 @@
+>=gui-apps/fuzzel-1.9.2::guru ~amd64
+>=gui-apps/tuigreet-0.7.2::gentoo ~amd64
+>=gui-apps/hyprpaper-0.3.0::guru ~amd64
+>=gui-apps/eww-0.4.0::guru ~amd64

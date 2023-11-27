@@ -1,0 +1,2 @@
+>=media-libs/libsndfile-1.2.2 minimal
+>=media-libs/libcanberra-0.30-r7::gentoo alsa

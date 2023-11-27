@@ -1,0 +1,2 @@
+media-video/pipewire sound-server ffmpeg extra dbus flatpak pipewire-alsa jack-sdk
+media-video/wireplumber elogind
